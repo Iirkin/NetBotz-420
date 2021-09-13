@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>5.0</version>
+    <date>2021-09-13T09:50:14Z</date>
+    <groups>
+        <group>
+            <name>Netbotz_group</name>
+        </group>
+        <group>
+            <name>Templates SNMP</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>NetbotzSNMP</template>
+            <name>Template SNMP APC NetBotz</name>
+            <groups>
+                <group>
+                    <name>Netbotz_group</name>
+                </group>
+                <group>
+                    <name>Templates SNMP</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>Air Flow</name>
+                </application>
+                <application>
+                    <name>Dew Point</name>
+                </application>
+                <application>
+                    <name>Fluid Detector</name>
+                </application>
+                <application>
+                    <name>Humidity</name>
+                </application>
+                <application>
+                    <name>Status</name>
+                </application>
+                <application>
+                    <name>Temperature</name>
+                </application>
+            </applications>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>Air Flow Sensor</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>discovery[{#SNMPVALUE},.1.3.6.1.4.1.5528.100.4.1.5.1.4]</snmp_oid>
+                    <key>airFlowSensorLabel</key>
+                    <delay>300</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Air Flow[$1]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>1.3.6.1.4.1.5528.100.4.1.5.1.8.{#SNMPINDEX}</snmp_oid>
+                            <key>airFlowSensorValueInt[{#SNMPVALUE}]</key>
+                            <delay>60</delay>
+                            <units>m/s</units>
+                            <applications>
+                                <application>
+                                    <name>Air Flow</name>
+                                </application>
+                            </applications>
+                            <request_method>POST</request_method>
+                        </item_prototype>
+                    </item_prototypes>
+                    <request_method>POST</request_method>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>Dew Point Sensor</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>discovery[{#SNMPVALUE},.1.3.6.1.4.1.5528.100.4.1.3.1.4]</snmp_oid>
+                    <key>dewPointSensorLabel</key>
+                    <delay>60</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Dew Point[$1]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>1.3.6.1.4.1.5528.100.4.1.3.1.8.{#SNMPINDEX}</snmp_oid>
+                            <key>dewPointSensorValueInt[{#SNMPVALUE}]</key>
+                            <delay>60</delay>
+                            <units>°C</units>
+                            <applications>
+                                <application>
+                                    <name>Dew Point</name>
+                                </application>
+                            </applications>
+                            <request_method>POST</request_method>
+                        </item_prototype>
+                    </item_prototypes>
+                    <request_method>POST</request_method>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>Dry Sensor</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>discovery[{#SNMPVALUE},.1.3.6.1.4.1.5528.100.4.2.1.1.4]</snmp_oid>
+                    <key>drySensorLabel</key>
+                    <delay>300s</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>DryContact[$1]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>1.3.6.1.4.1.5528.100.4.2.1.1.7.{#SNMPINDEX}</snmp_oid>
+                            <key>dryContactSensorValueStr[{#SNMPVALUE}]</key>
+                            <delay>10s</delay>
+                            <trends>0</trends>
+                            <value_type>TEXT</value_type>
+                            <request_method>POST</request_method>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{str(Wet)}=1</expression>
+                                    <name>Затопление</name>
+                                    <priority>DISASTER</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                    <request_method>POST</request_method>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>Humidity Sensor</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>discovery[{#SNMPVALUE},.1.3.6.1.4.1.5528.100.4.1.2.1.4]</snmp_oid>
+                    <key>humiSensorLabel</key>
+                    <delay>60</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Humidity[$1]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>1.3.6.1.4.1.5528.100.4.1.2.1.8.{#SNMPINDEX}</snmp_oid>
+                            <key>humiSensorValueInt[{#SNMPVALUE}]</key>
+                            <delay>60</delay>
+                            <units>%</units>
+                            <applications>
+                                <application>
+                                    <name>Humidity</name>
+                                </application>
+                            </applications>
+                            <request_method>POST</request_method>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}&lt;23 or {last()}&gt;65</expression>
+                                    <name>Влажность {ITEM.LASTVALUE1}</name>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                    <request_method>POST</request_method>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>Temperature Sensor</name>
+                    <type>SNMP_AGENT</type>
+                    <snmp_oid>discovery[{#SNMPVALUE},.1.3.6.1.4.1.5528.100.4.1.1.1.4]</snmp_oid>
+                    <key>tempSensorLabel</key>
+                    <delay>10</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Temperature[$1]</name>
+                            <type>SNMP_AGENT</type>
+                            <snmp_oid>1.3.6.1.4.1.5528.100.4.1.1.1.8.{#SNMPINDEX}</snmp_oid>
+                            <key>tempSensorValueInt[{#SNMPVALUE}]</key>
+                            <delay>10</delay>
+                            <units>°C</units>
+                            <applications>
+                                <application>
+                                    <name>Temperature</name>
+                                </application>
+                            </applications>
+                            <request_method>POST</request_method>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}&gt;34</expression>
+                                    <name>Температура {ITEM.LASTVALUE1}</name>
+                                    <priority>DISASTER</priority>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{nodata(10m)}=1</expression>
+                                    <name>Устройство не отвечает</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                    <request_method>POST</request_method>
+                </discovery_rule>
+            </discovery_rules>
+        </template>
+    </templates>
+</zabbix_export>
